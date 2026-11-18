@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="bg" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Radio World</title>
+<meta name="description" content="Радиостанции на живо от целия свят. Инсталира се като приложение.">
+<meta name="theme-color" content="#101114">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Radio World">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+// Apply saved theme before first paint (no flash).
+try { const t = localStorage.getItem('rw.theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><rect x="5" y="5" width="2.4" height="14" rx="1"/><path d="M19 6.2v11.6a1 1 0 0 1-1.55.83L9.2 12.83a1 1 0 0 1 0-1.66l8.25-5.8A1 1 0 0 1 19 6.2z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><rect x="16.6" y="5" width="2.4" height="14" rx="1"/><path d="M5 6.2v11.6a1 1 0 0 0 1.55.83l8.25-5.8a1 1 0 0 0 0-1.66L6.55 5.37A1 1 0 0 0 5 6.2z"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 20s-7.5-4.6-9.3-9.2C1.5 7.6 3.6 4.5 6.9 4.5c2 0 3.4 1.1 4.1 2.4h2c.7-1.3 2.1-2.4 4.1-2.4 3.3 0 5.4 3.1 4.2 6.3C19.5 15.4 12 20 12 20z"/></symbol>
+    <symbol id="i-heart-fill" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.3-9.2C1.5 7.6 3.6 4.5 6.9 4.5c2 0 3.4 1.1 4.1 2.4h2c.7-1.3 2.1-2.4 4.1-2.4 3.3 0 5.4 3.1 4.2 6.3C19.5 15.4 12 20 12 20z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5 20 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.6A8.5 8.5 0 0 1 9.4 4a8.5 8.5 0 1 0 10.6 10.6z"/></symbol>
+    <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></symbol>
+    <symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M8.2 8.2a5.4 5.4 0 0 0 0 7.6M15.8 8.2a5.4 5.4 0 0 1 0 7.6M5.3 5.3a9.5 9.5 0 0 0 0 13.4M18.7 5.3a9.5 9.5 0 0 1 0 13.4"/></g></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v10m0 0-4-4m4 4 4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.2 10.5V8a3.8 3.8 0 0 1 7.6 0v2.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <a class="brand" href="#/" aria-label="Radio World">
+    <img src="icons/favicon-64.png" alt="" width="28" height="28">
+    <span>Radio World</span>
+  </a>
+  <div class="top-actions">
+    <button class="icon-btn hidden" id="installBtn" type="button"><svg><use href="#i-download"/></svg><span class="lbl" data-i18n="install">Инсталирай</span></button>
+    <a class="icon-btn" id="favLink" href="#/favorites"><svg><use href="#i-heart"/></svg><span class="lbl" data-i18n="favorites">Любими</span></a>
+    <button class="icon-btn" id="langBtn" type="button" aria-label="Language">EN</button>
+    <button class="icon-btn" id="themeBtn" type="button"><svg><use href="#i-auto"/></svg></button>
+  </div>
+</header>
+
+<main id="view" tabindex="-1"></main>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<footer class="player" id="player" aria-label="Player">
+  <div class="p-info">
+    <img class="p-logo" id="pLogo" alt="" width="48" height="48">
+    <div class="p-text">
+      <div class="p-name" id="pName">—</div>
+      <div class="p-sub"><span class="dot" id="pDot"></span><span id="pStatus"></span></div>
+    </div>
+  </div>
+  <div class="p-controls">
+    <button class="ctl" id="prevBtn" type="button"><svg><use href="#i-prev"/></svg></button>
+    <button class="ctl play" id="playBtn" type="button"><svg><use href="#i-play"/></svg></button>
+    <button class="ctl" id="nextBtn" type="button"><svg><use href="#i-next"/></svg></button>
+  </div>
+  <div class="p-extra">
+    <button class="ctl fav" id="pFav" type="button"><svg><use href="#i-heart"/></svg></button>
+    <label class="vol"><svg aria-hidden="true"><use href="#i-volume"/></svg><input id="volume" type="range" min="0" max="100" step="1" value="80"></label>
+  </div>
+</footer>
+<audio id="audio" preload="none"></audio>
+
+<script src="app.js"></script>
+</body>
+</html>
