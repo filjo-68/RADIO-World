@@ -1,28 +1,32 @@
 <!doctype html>
+<!-- Radio World · © 2026 Radio World. All rights reserved. See LICENSE. -->
 <html lang="bg" data-theme="auto">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Radio World</title>
-<meta name="description" content="Радиостанции на живо от целия свят. Инсталира се като приложение.">
-<meta name="theme-color" content="#101114">
+<title>Radio World — радио от целия свят</title>
+<meta name="description" content="Над 50 000 радиостанции на живо от 249 държави. Инсталира се като приложение и работи офлайн.">
+<meta name="theme-color" content="#08070f">
 <meta name="color-scheme" content="light dark">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icons/favicon-64.png">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Radio World">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preload" href="fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>
-// Apply saved theme before first paint (no flash).
-try { const t = localStorage.getItem('rw.theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+try { const t = localStorage.getItem('rw.theme'); if (t) { const v = JSON.parse(t); if (v === 'light' || v === 'dark') document.documentElement.dataset.theme = v; } } catch (e) {}
 </script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
+    <linearGradient id="brandGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FF3D8B"/><stop offset=".55" stop-color="#7B2FF7"/><stop offset="1" stop-color="#3DD9FF"/></linearGradient>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></symbol>
     <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></symbol>
     <symbol id="i-prev" viewBox="0 0 24 24"><rect x="5" y="5" width="2.4" height="14" rx="1"/><path d="M19 6.2v11.6a1 1 0 0 1-1.55.83L9.2 12.83a1 1 0 0 1 0-1.66l8.25-5.8A1 1 0 0 1 19 6.2z"/></symbol>
@@ -31,6 +35,7 @@ try { const t = localStorage.getItem('rw.theme'); if (t === 'light' || t === 'da
     <symbol id="i-heart-fill" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.3-9.2C1.5 7.6 3.6 4.5 6.9 4.5c2 0 3.4 1.1 4.1 2.4h2c.7-1.3 2.1-2.4 4.1-2.4 3.3 0 5.4 3.1 4.2 6.3C19.5 15.4 12 20 12 20z"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5 20 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
     <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></symbol>
     <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.6A8.5 8.5 0 0 1 9.4 4a8.5 8.5 0 1 0 10.6 10.6z"/></symbol>
     <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></symbol>
@@ -38,46 +43,96 @@ try { const t = localStorage.getItem('rw.theme'); if (t === 'light' || t === 'da
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v10m0 0-4-4m4 4 4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.2 10.5V8a3.8 3.8 0 0 1 7.6 0v2.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="15.5" cy="8.5" r="1.5"/><circle cx="8.5" cy="15.5" r="1.5"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><path d="M19.5 14.2A7.6 7.6 0 1 1 9.8 4.5a6 6 0 0 0 9.7 9.7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M15 3.5h4l-4 4.5h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4m0 0L8 8m4-4 4 4M6 12v6.5a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5V12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="1.9"/><ellipse cx="12" cy="12" rx="3.8" ry="8.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.6 12h16.8" stroke="currentColor" stroke-width="1.6"/></symbol>
   </defs>
 </svg>
 
+<div class="ambient" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+
 <header class="topbar">
   <a class="brand" href="#/" aria-label="Radio World">
-    <img src="icons/favicon-64.png" alt="" width="28" height="28">
-    <span>Radio World</span>
+    <img src="icons/favicon.svg" alt="" width="30" height="30">
+    <span>Radio<b>World</b></span>
   </a>
-  <div class="top-actions">
+  <nav class="top-actions">
     <button class="icon-btn hidden" id="installBtn" type="button"><svg><use href="#i-download"/></svg><span class="lbl" data-i18n="install">Инсталирай</span></button>
     <a class="icon-btn" id="favLink" href="#/favorites"><svg><use href="#i-heart"/></svg><span class="lbl" data-i18n="favorites">Любими</span></a>
-    <button class="icon-btn" id="langBtn" type="button" aria-label="Language">EN</button>
+    <a class="icon-btn" id="aboutLink" href="#/about"><svg><use href="#i-info"/></svg></a>
+    <button class="icon-btn" id="langBtn" type="button">EN</button>
     <button class="icon-btn" id="themeBtn" type="button"><svg><use href="#i-auto"/></svg></button>
-  </div>
+  </nav>
 </header>
 
 <main id="view" tabindex="-1"></main>
 
 <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-<footer class="player" id="player" aria-label="Player">
-  <div class="p-info">
-    <img class="p-logo" id="pLogo" alt="" width="48" height="48">
-    <div class="p-text">
-      <div class="p-name" id="pName">—</div>
-      <div class="p-sub"><span class="dot" id="pDot"></span><span id="pStatus"></span></div>
-    </div>
+<!-- Install sheet -->
+<div class="sheet-backdrop hidden" id="installSheet" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+  <div class="sheet">
+    <button class="sheet-close" type="button" data-close><svg><use href="#i-close"/></svg></button>
+    <img class="sheet-icon" src="icons/icon-192.png" alt="" width="88" height="88">
+    <h2 id="installTitle"></h2>
+    <p class="muted" id="installText"></p>
+    <ol class="steps" id="installSteps"></ol>
   </div>
+</div>
+
+<!-- Now playing -->
+<section class="np hidden" id="np" role="dialog" aria-modal="true" aria-labelledby="npName">
+  <div class="np-bg" id="npBg"></div><div class="np-glow"></div>
+  <div class="np-inner">
+    <div class="np-top">
+      <button class="icon-btn" type="button" id="npClose"><svg><use href="#i-down"/></svg></button>
+      <span class="np-kicker" data-i18n="nowPlaying">Сега свири</span>
+      <button class="icon-btn" type="button" id="npShare"><svg><use href="#i-share"/></svg></button>
+    </div>
+    <div class="np-art"><span class="ring"></span><img id="npLogo" alt="" width="220" height="220"></div>
+    <h2 class="np-name" id="npName">—</h2>
+    <a class="np-country" id="npCountry" href="#/"></a>
+    <div class="np-status" id="npStatus"></div>
+    <div class="np-tags" id="npTags"></div>
+    <canvas class="np-viz" id="npViz" aria-hidden="true"></canvas>
+    <div class="np-controls">
+      <button class="ctl" type="button" data-act="prev"><svg><use href="#i-prev"/></svg></button>
+      <button class="ctl play big" type="button" data-act="toggle"><svg><use href="#i-play"/></svg></button>
+      <button class="ctl" type="button" data-act="next"><svg><use href="#i-next"/></svg></button>
+    </div>
+    <div class="np-row">
+      <button class="ctl fav" type="button" data-act="fav"><svg><use href="#i-heart"/></svg></button>
+      <label class="vol"><svg aria-hidden="true"><use href="#i-volume"/></svg><input type="range" min="0" max="100" step="1" class="volRange"></label>
+    </div>
+    <div class="np-sleep"><span class="muted" data-i18n="sleep">Таймер за сън</span><div class="seg" id="sleepSeg"></div></div>
+  </div>
+</section>
+
+<footer class="player" id="player" aria-label="Player">
+  <button class="p-info" id="pInfo" type="button">
+    <span class="p-art"><span class="ring"></span><img class="p-logo" id="pLogo" alt="" width="48" height="48"></span>
+    <span class="p-text">
+      <span class="p-name" id="pName">—</span>
+      <span class="p-sub"><span class="eq" id="pEq"><i></i><i></i><i></i><i></i></span><span class="dot" id="pDot"></span><span id="pStatus"></span></span>
+    </span>
+  </button>
   <div class="p-controls">
-    <button class="ctl" id="prevBtn" type="button"><svg><use href="#i-prev"/></svg></button>
-    <button class="ctl play" id="playBtn" type="button"><svg><use href="#i-play"/></svg></button>
-    <button class="ctl" id="nextBtn" type="button"><svg><use href="#i-next"/></svg></button>
+    <button class="ctl" id="prevBtn" type="button" data-act="prev"><svg><use href="#i-prev"/></svg></button>
+    <button class="ctl play" id="playBtn" type="button" data-act="toggle"><svg><use href="#i-play"/></svg></button>
+    <button class="ctl" id="nextBtn" type="button" data-act="next"><svg><use href="#i-next"/></svg></button>
   </div>
   <div class="p-extra">
-    <button class="ctl fav" id="pFav" type="button"><svg><use href="#i-heart"/></svg></button>
-    <label class="vol"><svg aria-hidden="true"><use href="#i-volume"/></svg><input id="volume" type="range" min="0" max="100" step="1" value="80"></label>
+    <button class="ctl timer" id="sleepBtn" type="button"><svg><use href="#i-timer"/></svg><span class="badge-n" id="sleepBadge"></span></button>
+    <button class="ctl fav" id="pFav" type="button" data-act="fav"><svg><use href="#i-heart"/></svg></button>
+    <label class="vol"><svg aria-hidden="true"><use href="#i-volume"/></svg><input type="range" min="0" max="100" step="1" class="volRange" id="volume"></label>
   </div>
 </footer>
 <audio id="audio" preload="none"></audio>
 
-<script src="app.js"></script>
+<script src="globe.js" defer></script>
+<script src="app.js" defer></script>
 </body>
 </html>

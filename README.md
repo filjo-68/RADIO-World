@@ -1,9 +1,13 @@
-# RADIO-World
+<p align="center"><img src="docs/icons/icon-192.png" width="96" height="96" alt="Radio World"></p>
 
-**Radio World** is an installable web app (PWA) for live radio from 249 countries.
-It works on phones and computers and has light and dark themes.
+<h1 align="center">Radio World</h1>
+<p align="center"><b>Tune in to the planet.</b> 51,000+ live radio stations from 249 countries, in one installable app.</p>
 
-- The app is in [`docs/`](docs/). Description, how to run it and limitations: [`docs/README.md`](docs/README.md).
-- Build scripts (station snapshot, icons, service worker) are in [`tools/pwa/`](tools/pwa/).
+<p align="center"><img src="docs/screenshots/wide.webp" width="760" alt="Radio World — home screen with the interactive globe"></p>
 
-Station data: [radio-browser.info](https://www.radio-browser.info/).
+- **The app** is in [`docs/`](docs/), with its description and how to run it in [`docs/README.md`](docs/README.md).
+- **Build scripts** are in [`tools/pwa/`](tools/pwa/).
+
+## License
+© 2026 Radio World. **All rights reserved.** See [`LICENSE`](LICENSE).
+Third-party components (hls.js, the Unbounded and Manrope fonts, Natural Earth/world-atlas, flags, radio-browser.info data) keep their own licenses. They are listed in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
