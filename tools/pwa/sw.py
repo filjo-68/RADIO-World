@@ -1,6 +1,6 @@
 import sys, os, json, hashlib, glob
 root = sys.argv[1]
-files = ['./', 'index.html', 'styles.css', 'i18n.js', 'app.js', 'globe.js', 'manifest.webmanifest', 'data/countries.json', 'data/globe.json',
+files = ['./', 'index.html', 'styles.css', 'i18n.js', 'themes.js', 'app.js', 'globe.js', 'manifest.webmanifest', 'data/countries.json', 'data/globe.json',
          'vendor/hls.light.min.js', 'LICENSE.txt', 'THIRD_PARTY_NOTICES.txt', 'icons/favicon.svg']
 files += sorted(os.path.relpath(p, root) for p in glob.glob(os.path.join(root, 'fonts', '*.woff2')))
 files += sorted(os.path.relpath(p, root) for p in glob.glob(os.path.join(root, 'icons', '*.png')))

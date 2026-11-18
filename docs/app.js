@@ -2,7 +2,7 @@
    Station directory: radio-browser.info (public domain data). */
 'use strict';
 (() => {
-  const APP_VERSION = '2.1.0';
+  const APP_VERSION = '2.2.0';
   const API_HOSTS = ['de1.api.radio-browser.info', 'de2.api.radio-browser.info', 'all.api.radio-browser.info'];
   const DATA_CACHE = 'rw-data-v1';
   const PAGE = 120;
@@ -55,9 +55,10 @@
   const upgrade = u => (IS_HTTPS && /^http:\/\//i.test(u || '') ? 'https://' + u.slice(7) : u);
   const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(loc(), { year: 'numeric', month: '2-digit', day: '2-digit' }); } catch (e) { return iso; } };
   const norm = s => String(s || '').toLocaleLowerCase();
-  const PLACEHOLDER = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ff3d8b"/><stop offset=".55" stop-color="#7b2ff7"/><stop offset="1" stop-color="#3dd9ff"/></linearGradient></defs>' +
+  const makePlaceholder = (c1, c2, c3) => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${c1}"/><stop offset=".55" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs>` +
     '<rect width="96" height="96" rx="22" fill="url(#g)" opacity=".9"/><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M34 34a20 20 0 0 0 0 28M62 34a20 20 0 0 1 0 28"/><path d="M24 24a34 34 0 0 0 0 48M72 24a34 34 0 0 1 0 48" opacity=".55"/></g><circle cx="48" cy="48" r="7" fill="#fff"/></svg>');
+  let PLACEHOLDER = makePlaceholder('#ff3d8b', '#7b2ff7', '#3dd9ff');
   const logoTag = (url, cls = 'logo') =>
     `<img class="${cls}" src="${esc(safeUrl(upgrade(url)) || PLACEHOLDER)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${PLACEHOLDER}'">`;
   const flagTag = (cc, cls = 'flag') =>
@@ -74,24 +75,105 @@
     if (!action) toastTimer = setTimeout(() => el.classList.add('hidden'), 3800);
   }
 
-  // ---------- theme ----------
-  const THEMES = ['auto', 'light', 'dark'];
+  // ---------- appearance: mode, palette, background, effects ----------
+  const THEMES = window.RW_THEMES;
+  const MODES = ['auto', 'light', 'dark'];
+  const LOOK_DEFAULT = { palette: 'aurora', bg: 'lights', grain: true, glow: false, glass: true };
   let theme = LS.get('theme', 'auto');
+  let look = { ...LOOK_DEFAULT, ...LS.get('lookCfg', {}) };
+  if (!THEMES.palettes[look.palette]) look.palette = 'aurora';
+  if (!THEMES.backgrounds.includes(look.bg)) look.bg = 'lights';
   let globe = null;
-  function applyTheme() {
-    document.documentElement.dataset.theme = theme;
-    const btn = $('#themeBtn');
-    btn.innerHTML = icon(theme === 'light' ? 'i-sun' : theme === 'dark' ? 'i-moon' : 'i-auto');
-    const label = t(theme === 'light' ? 'themeLight' : theme === 'dark' ? 'themeDark' : 'themeAuto');
-    btn.title = label; btn.setAttribute('aria-label', label);
-    requestAnimationFrame(() => {
-      const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-      $('meta[name="theme-color"]').setAttribute('content', bg || '#08070f');
-      if (globe) globe.readTheme();
-    });
+  const darkMQ = matchMedia('(prefers-color-scheme: dark)');
+  const isDark = () => theme === 'dark' || (theme === 'auto' && darkMQ.matches);
+  const hexA = (hex, a) => `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a})`;
+  const lumi = h => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+  const contrast = (a, b) => { const x = lumi(a), y = lumi(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  const INK = '#160f24';
+  function paletteVars(name, dark) {
+    const P = THEMES.palettes[name] || THEMES.palettes.aurora, m = dark ? P.dark : P.light, c = m.c || P.c;
+    return {
+      '--c1': c[0], '--c2': c[1], '--c3': c[2],
+      '--on-grad': contrast('#ffffff', c[1]) >= contrast(INK, c[1]) ? '#ffffff' : INK,
+      '--grad': `linear-gradient(115deg, ${c[0]} 0%, ${c[1]} 52%, ${c[2]} 100%)`,
+      '--grad-text': `linear-gradient(100deg, ${m.a1} 0%, ${m.a2} 50%, ${m.a3} 100%)`,
+      '--accent': m.a1, '--accent-2': m.a2, '--accent-3': m.a3, '--bg': m.bg, '--panel-solid': m.panel || '#ffffff',
+      '--globe-dot': m.dot, '--globe-sea': m.sea, '--globe-rim': m.rim || c[1],
+      '--blob-1': hexA(c[0], dark ? 0.2 : 0.22), '--blob-2': hexA(c[1], dark ? 0.26 : 0.18), '--blob-3': hexA(c[2], dark ? 0.16 : 0.18),
+    };
   }
-  $('#themeBtn').addEventListener('click', () => { theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length]; LS.set('theme', theme); applyTheme(); toast($('#themeBtn').title); });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => theme === 'auto' && applyTheme());
+  function applyTheme() {
+    const r = document.documentElement, dark = isDark();
+    r.dataset.theme = theme; r.dataset.mode = dark ? 'dark' : 'light';
+    const vars = paletteVars(look.palette, dark);
+    for (const k in vars) r.style.setProperty(k, vars[k]);
+    const attrs = { bg: look.bg, grain: look.grain ? 'on' : 'off', glow: look.glow ? 'on' : 'off', glass: look.glass ? 'on' : 'off', mode: r.dataset.mode };
+    Object.assign(r.dataset, attrs);
+    LS.set('look', { vars, ...attrs });
+    const btn = $('#themeBtn');
+    btn.innerHTML = icon('i-palette');
+    btn.title = t('appearance'); btn.setAttribute('aria-label', t('appearance'));
+    $('meta[name="theme-color"]').setAttribute('content', vars['--bg']);
+    const oldPH = PLACEHOLDER;
+    PLACEHOLDER = makePlaceholder(vars['--c1'], vars['--c2'], vars['--c3']);
+    if (oldPH !== PLACEHOLDER) for (const img of document.images) if (img.getAttribute('src') === oldPH) img.src = PLACEHOLDER;
+    requestAnimationFrame(() => { if (globe) globe.readTheme(); });
+  }
+  function saveLook() { LS.set('lookCfg', look); LS.set('theme', theme); applyTheme(); renderLook(); }
+  const sw = (name, dark) => { const P = THEMES.palettes[name], m = dark ? P.dark : P.light, c = m.c || P.c; return { c, bg: m.bg }; };
+  function renderLook() {
+    const body = $('#lookBody'); if (!body) return;
+    const keep = $('#lookSheet .sheet').scrollTop, dark = isDark();
+    const palKey = k => 'pal' + k[0].toUpperCase() + k.slice(1);
+    const bgKey = k => 'bg' + k[0].toUpperCase() + k.slice(1);
+    const active = THEMES.presets.find(p => p.palette === look.palette && p.bg === look.bg && p.grain === look.grain && p.glow === look.glow && p.glass === look.glass && (!p.mode || p.mode === theme));
+    $('#lookTitle').textContent = t('appearance');
+    body.innerHTML = `
+      <h3>${esc(t('mode'))}</h3>
+      <div class="seg" role="group">${MODES.map(m => `<button type="button" data-mode="${m}" aria-pressed="${theme === m}">${esc(t(m === 'auto' ? 'modeSystem' : m === 'light' ? 'modeLight' : 'modeDark'))}</button>`).join('')}</div>
+      <h3>${esc(t('presets'))}</h3>
+      <div class="presets">${THEMES.presets.map(p => { const s = sw(p.palette, p.mode ? p.mode === 'dark' : dark);
+        return `<button class="preset" type="button" data-preset="${p.id}" aria-pressed="${active === p}">
+          <span class="pv" style="background:${s.bg};background-image:radial-gradient(at 15% 15%, ${s.c[0]}, transparent 60%),radial-gradient(at 90% 30%, ${s.c[1]}, transparent 60%),radial-gradient(at 60% 110%, ${s.c[2]}, transparent 65%)"><i style="background:linear-gradient(135deg, ${s.c.join(', ')})"></i></span>
+          <b>${esc(t(p.id))}</b></button>`; }).join('')}</div>
+      <h3>${esc(t('palette'))}</h3>
+      <div class="swatches">${Object.keys(THEMES.palettes).map(k => { const s = sw(k, dark);
+        return `<button class="swatch" type="button" data-pal="${k}" aria-pressed="${look.palette === k}"><span class="dotc" style="background:conic-gradient(${s.c[0]}, ${s.c[1]}, ${s.c[2]}, ${s.c[0]});--sw-bg:${s.bg}"></span>${esc(t(palKey(k)))}</button>`; }).join('')}</div>
+      <h3>${esc(t('background'))}</h3>
+      <div class="bgs">${THEMES.backgrounds.map(b => `<button class="bgopt" type="button" data-bgopt="${b}" aria-pressed="${look.bg === b}"><span class="pv ${b}"></span>${esc(t(bgKey(b)))}</button>`).join('')}</div>
+      <h3>${esc(t('effects'))}</h3>
+      <div class="toggles">${['grain', 'glow', 'glass'].map(k => `<button class="toggle" type="button" role="switch" data-toggle="${k}" aria-checked="${!!look[k]}"><span>${esc(t(k))}</span><span class="sw"></span></button>`).join('')}</div>
+      <div class="look-actions">
+        <button class="btn primary" type="button" data-look="random">${icon('i-dice')} ${esc(t('randomCombo'))}</button>
+        <button class="btn" type="button" data-look="reset">${esc(t('reset'))}</button>
+      </div>`;
+    $('#lookSheet .sheet').scrollTop = keep;
+  }
+  function openLook() { renderLook(); $('#lookSheet').classList.remove('hidden'); $('#lookSheet [data-close]').focus(); }
+  function closeLook() { $('#lookSheet').classList.add('hidden'); }
+  $('#themeBtn').addEventListener('click', openLook);
+  $('#lookSheet').addEventListener('click', e => {
+    if (e.target.id === 'lookSheet' || e.target.closest('[data-close]')) { closeLook(); return; }
+    const b = e.target.closest('button'); if (!b) return;
+    const pick = a => a[Math.floor(Math.random() * a.length)];
+    if (b.dataset.mode) theme = b.dataset.mode;
+    else if (b.dataset.pal) look.palette = b.dataset.pal;
+    else if (b.dataset.bgopt) look.bg = b.dataset.bgopt;
+    else if (b.dataset.toggle) look[b.dataset.toggle] = !look[b.dataset.toggle];
+    else if (b.dataset.preset) {
+      const p = THEMES.presets.find(x => x.id === b.dataset.preset);
+      look = { palette: p.palette, bg: p.bg, grain: p.grain, glow: p.glow, glass: p.glass };
+      if (p.mode) theme = p.mode;
+      toast(t('schemeApplied', { name: t(p.id) }));
+    } else if (b.dataset.look === 'random') {
+      look = { palette: pick(Object.keys(THEMES.palettes)), bg: pick(THEMES.backgrounds), grain: Math.random() < 0.6, glow: Math.random() < 0.45, glass: Math.random() < 0.85 };
+      const pk = 'pal' + look.palette[0].toUpperCase() + look.palette.slice(1), bk = 'bg' + look.bg[0].toUpperCase() + look.bg.slice(1);
+      toast(t('schemeApplied', { name: `${t(pk)} · ${t(bk)}` }));
+    } else if (b.dataset.look === 'reset') { look = { ...LOOK_DEFAULT }; theme = 'auto'; }
+    else return;
+    saveLook();
+  });
+  darkMQ.addEventListener?.('change', () => { if (theme === 'auto') { applyTheme(); renderLook(); } });
 
   // ---------- language ----------
   function applyLang() {
@@ -110,6 +192,7 @@
     $('#npClose').setAttribute('aria-label', t('close')); $('#npShare').setAttribute('aria-label', t('share'));
     $('#sleepBtn').setAttribute('aria-label', t('sleep')); $('#sleepBtn').title = t('sleep');
     $('#installSheet [data-close]').setAttribute('aria-label', t('close'));
+    $('#lookSheet [data-close]').setAttribute('aria-label', t('close'));
     applyTheme(); renderSleepSeg(); updatePlayerUI();
   }
   function openLangSheet() {
@@ -348,7 +431,7 @@
   const v0 = LS.get('vol', 80); audio.volume = v0 / 100; vols.forEach(v => { v.value = v0; });
   vols.forEach(v => v.addEventListener('input', () => { audio.volume = v.value / 100; LS.set('vol', +v.value); vols.forEach(o => { if (o !== v) o.value = v.value; }); }));
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { if (!$('#np').classList.contains('hidden')) closeNP(); else if (!$('#installSheet').classList.contains('hidden')) closeInstall(); else if (!$('#langSheet').classList.contains('hidden')) closeLangSheet(); return; }
+    if (e.key === 'Escape') { if (!$('#np').classList.contains('hidden')) closeNP(); else if (!$('#installSheet').classList.contains('hidden')) closeInstall(); else if (!$('#langSheet').classList.contains('hidden')) closeLangSheet(); else if (!$('#lookSheet').classList.contains('hidden')) closeLook(); return; }
     if (e.code !== 'Space' || /^(INPUT|SELECT|TEXTAREA|BUTTON|A)$/.test(e.target.tagName) || e.target.getAttribute('role') === 'button') return;
     e.preventDefault(); togglePlay();
   });
@@ -422,7 +505,7 @@
       if (c.width !== Math.round(w * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
       const n = 44, gap = 3, bw = (w - gap * (n - 1)) / n, live = state === 'live', tt = now / 1000;
-      const g = ctx.createLinearGradient(0, 0, w, 0); g.addColorStop(0, '#ff3d8b'); g.addColorStop(.55, '#7b2ff7'); g.addColorStop(1, '#3dd9ff');
+      const cs = getComputedStyle(document.documentElement), g = ctx.createLinearGradient(0, 0, w, 0); g.addColorStop(0, cs.getPropertyValue('--c1').trim()); g.addColorStop(.55, cs.getPropertyValue('--c2').trim()); g.addColorStop(1, cs.getPropertyValue('--c3').trim());
       ctx.fillStyle = g; ctx.globalAlpha = .85;
       for (let i = 0; i < n; i++) {
         const x = i / n, env = Math.sin(Math.PI * x) * .8 + .2;
@@ -656,7 +739,7 @@
     view.innerHTML = `
       <article class="prose">
         <div class="page-head"><a class="back" href="#/" aria-label="${esc(t('back'))}">${icon('i-back')}</a></div>
-        <img src="icons/icon-192.png" alt="" width="84" height="84" style="border-radius:20px;box-shadow:0 14px 34px rgba(123,47,247,.4);margin-top:10px">
+        <img src="icons/icon-192.png" alt="" width="84" height="84" style="border-radius:20px;box-shadow:0 14px 34px color-mix(in srgb, var(--c2) 40%, transparent);margin-top:10px">
         <h1>${esc(t('aboutTitle'))}</h1>
         <p>${esc(t('aboutLead'))}</p>
         <p class="count">${esc(t('version'))} ${APP_VERSION}</p>

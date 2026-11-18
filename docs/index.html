@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- Radio World · © 2026 Radio World. All rights reserved. See LICENSE. -->
-<html lang="bg" data-theme="auto">
+<html lang="bg" data-theme="auto" data-bg="lights" data-grain="on" data-glow="off" data-glass="on">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -19,7 +19,12 @@
 <link rel="preload" href="fonts/unbounded-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>
-try { const t = localStorage.getItem('rw.theme'); if (t) { const v = JSON.parse(t); if (v === 'light' || v === 'dark') document.documentElement.dataset.theme = v; } } catch (e) {}
+try {
+  const r = document.documentElement, t = JSON.parse(localStorage.getItem('rw.theme') || 'null');
+  if (t === 'light' || t === 'dark') r.dataset.theme = t;
+  const a = JSON.parse(localStorage.getItem('rw.look') || 'null'); // last applied colour scheme, to avoid a flash
+  if (a && a.vars) { for (const k in a.vars) r.style.setProperty(k, a.vars[k]); for (const k of ['bg', 'grain', 'glow', 'glass', 'mode']) if (a[k]) r.dataset[k] = a[k]; }
+} catch (e) {}
 </script>
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -48,11 +53,12 @@ try { const t = localStorage.getItem('rw.theme'); if (t) { const v = JSON.parse(
     <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.3"/></symbol>
     <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4m0 0L8 8m4-4 4 4M6 12v6.5a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5V12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c1.4 0 2-1 2-2 0-1.3-1-1.6-1-2.7 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="11" r="1.5"/><circle cx="10" cy="7" r="1.5"/><circle cx="14.5" cy="7" r="1.5"/></symbol>
     <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="1.9"/><ellipse cx="12" cy="12" rx="3.8" ry="8.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.6 12h16.8" stroke="currentColor" stroke-width="1.6"/></symbol>
   </defs>
 </svg>
 
-<div class="ambient" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+<div class="ambient" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="mesh"></span><span class="stars"></span><span class="floor"></span></div>
 
 <header class="topbar">
   <a class="brand" href="#/" aria-label="Radio World">
@@ -80,6 +86,15 @@ try { const t = localStorage.getItem('rw.theme'); if (t) { const v = JSON.parse(
     <h2 id="installTitle"></h2>
     <p class="muted" id="installText"></p>
     <ol class="steps" id="installSteps"></ol>
+  </div>
+</div>
+
+<!-- Appearance -->
+<div class="sheet-backdrop hidden" id="lookSheet" role="dialog" aria-modal="true" aria-labelledby="lookTitle">
+  <div class="sheet look">
+    <button class="sheet-close" type="button" data-close><svg><use href="#i-close"/></svg></button>
+    <h2 id="lookTitle">Appearance</h2>
+    <div id="lookBody"></div>
   </div>
 </div>
 
@@ -142,6 +157,7 @@ try { const t = localStorage.getItem('rw.theme'); if (t) { const v = JSON.parse(
 <audio id="audio" preload="none"></audio>
 
 <script src="i18n.js" defer></script>
+<script src="themes.js" defer></script>
 <script src="globe.js" defer></script>
 <script src="app.js" defer></script>
 </body>

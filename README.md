@@ -1,7 +1,7 @@
 <p align="center"><img src="docs/icons/icon-192.png" width="96" height="96" alt="Radio World"></p>
 
 <h1 align="center">Radio World</h1>
-<p align="center"><b>Tune in to the planet.</b> 51,000+ live radio stations from 249 countries, in one installable app, in 15 languages.</p>
+<p align="center"><b>Tune in to the planet.</b> 51,000+ live radio stations from 249 countries, in one installable app, in 15 languages, with 14 palettes, 5 backgrounds and 10 ready-made colour schemes.</p>
 
 <p align="center"><img src="docs/screenshots/wide.webp" width="760" alt="Radio World — home screen with the interactive globe"></p>
 
