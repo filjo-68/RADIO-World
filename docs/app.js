@@ -2,7 +2,7 @@
    Station directory: radio-browser.info (public domain data). */
 'use strict';
 (() => {
-  const APP_VERSION = '2.0.0';
+  const APP_VERSION = '2.1.0';
   const API_HOSTS = ['de1.api.radio-browser.info', 'de2.api.radio-browser.info', 'all.api.radio-browser.info'];
   const DATA_CACHE = 'rw-data-v1';
   const PAGE = 120;
@@ -17,81 +17,34 @@
   };
 
   // ---------- i18n ----------
-  const STR = {
-    bg: {
-      install: 'Инсталирай', favorites: 'Любими', about: 'За приложението', langName: 'EN',
-      livePill: n => `На живо от ${n} държави`, heroA: 'Настрой се на', heroB: 'планетата.',
-      lead: (s, c) => `${s} радиостанции от ${c} държави — на живо и без регистрация. Инсталирай го като приложение и слушай навсякъде.`,
-      listenNow: 'Слушай сега', resume: 'Продължи', surprise: 'Изненадай ме', statStations: 'станции', statCountries: 'държави', statOffline: 'работи офлайн',
-      globeHint: 'Завърти глобуса · докосни сигнал', installTitle: 'Инсталирай Radio World',
-      installText: 'Отваря се от началния екран като истинско приложение — на цял екран, бързо и без браузър.', installed: 'Radio World е инсталирано. ✨',
-      installIOS: ['Натисни бутона „Сподели“ в Safari (квадрат със стрелка нагоре).', 'Избери „Добави към началния екран“.', 'Натисни „Добави“ — иконата ще се появи на екрана.'],
-      installAndroid: ['Отвори менюто ⋮ горе вдясно в Chrome.', 'Избери „Инсталиране на приложение“ или „Добавяне към началния екран“.', 'Потвърди с „Инсталиране“.'],
-      installDesktop: ['Потърси иконата за инсталиране вдясно в адресната лента (Chrome или Edge).', 'Натисни „Инсталиране“.', 'Radio World ще се отваря като отделно приложение.'],
-      installMacSafari: ['В Safari отвори менюто „Файл“.', 'Избери „Добави в Dock“.', 'Потвърди с „Добави“.'],
-      installFirefox: ['Firefox на компютър не инсталира уеб приложения.', 'Отвори този адрес в Chrome или Edge.', 'После натисни иконата за инсталиране в адресната лента.'],
-      countries: 'Държави', exploreKicker: 'Открий', nCountries: n => `${n} държави`, nStations: n => `${n} станции`,
-      sortDefault: 'Препоръчани', sortName: 'Име А–Я', sortStations: 'Най-много станции', recent: 'Последно слушани',
-      searchCountries: 'Търси държава или код…', searchStations: 'Търси станция или жанр…',
-      sortPopular: 'Най-слушани', sortVotes: 'Най-харесвани', sortBitrate: 'Най-високо качество', onlyFav: 'Само любими', onlyHttps: 'Само HTTPS',
-      noCountries: 'Няма намерени държави.', noStations: 'Няма намерени станции.', loading: 'Зареждане…',
-      favTitle: 'Любими станции', favEmpty: 'Още нямаш любими. Натисни ♥ до станция, за да я добавиш.',
-      pick: 'Избери станция', connecting: 'Свързване…', live: 'На живо', paused: 'Пауза',
-      error: 'Станцията не отговаря', errorHttp: 'Само HTTP — блокирана през HTTPS',
-      srcLive: 'Актуален списък от radio-browser.info', srcCache: d => `Офлайн копие от ${d}`, srcSnapshot: d => `Вграден списък от ${d}`,
-      offline: 'Няма интернет — радиото изисква връзка.', online: 'Връзката е възстановена.', update: 'Има нова версия.', reload: 'Обнови',
-      themeAuto: 'Тема: системна', themeLight: 'Тема: светла', themeDark: 'Тема: тъмна',
-      play: 'Пусни', pause: 'Пауза', prev: 'Предишна', next: 'Следваща', addFav: 'Добави в любими', removeFav: 'Махни от любими',
-      back: 'Назад', volume: 'Сила на звука', notFound: 'Няма такава държава.', close: 'Затвори',
-      httpNote: 'Станциите с етикет HTTP може да не тръгнат, когато приложението е отворено през HTTPS.',
-      nowPlaying: 'Сега свири', sleep: 'Таймер за сън', off: 'Изкл.', min: 'мин', sleepSet: n => `Радиото ще спре след ${n} мин.`, sleepOff: 'Таймерът за сън е изключен.',
-      sleepDone: 'Таймерът за сън спря радиото. Лека нощ 🌙', share: 'Сподели', copied: 'Връзката е копирана.', surpriseFrom: (n, c) => `Изненада: ${n} · ${c}`,
-      aboutTitle: 'За Radio World', aboutLead: 'Радио от целия свят в едно бързо, красиво и инсталируемо приложение.',
-      license: 'Лиценз', licenseText: '© 2026 Radio World. Всички права запазени. Кодът, дизайнът, иконата и визуалните елементи на Radio World не може да се копират, променят или разпространяват без писмено разрешение, освен доколкото го позволяват приложимото право или Условията за ползване на GitHub.',
-      thirdParty: 'Чужди компоненти и данни', fullLicense: 'Пълен текст на лиценза', notices: 'Всички бележки за чужди компоненти',
-      disclaimer: 'Radio World не е свързан с radio-browser.info или с радиостанциите. Потоците, имената и логата принадлежат на съответните им собственици.',
-      version: 'Версия', rights: 'Всички права запазени',
-    },
-    en: {
-      install: 'Install', favorites: 'Favorites', about: 'About', langName: 'БГ',
-      livePill: n => `Live from ${n} countries`, heroA: 'Tune in to', heroB: 'the planet.',
-      lead: (s, c) => `${s} radio stations from ${c} countries — live, no sign-up. Install it as an app and listen anywhere.`,
-      listenNow: 'Listen now', resume: 'Resume', surprise: 'Surprise me', statStations: 'stations', statCountries: 'countries', statOffline: 'works offline',
-      globeHint: 'Spin the globe · tap a signal', installTitle: 'Install Radio World',
-      installText: 'Opens from your home screen like a real app — full screen, fast, no browser.', installed: 'Radio World is installed. ✨',
-      installIOS: ['Tap the Share button in Safari (square with an up arrow).', 'Choose “Add to Home Screen”.', 'Tap “Add” — the icon appears on your screen.'],
-      installAndroid: ['Open the ⋮ menu in Chrome (top right).', 'Choose “Install app” or “Add to Home screen”.', 'Confirm with “Install”.'],
-      installDesktop: ['Find the install icon at the right of the address bar (Chrome or Edge).', 'Click “Install”.', 'Radio World opens as its own app.'],
-      installMacSafari: ['In Safari open the “File” menu.', 'Choose “Add to Dock”.', 'Confirm with “Add”.'],
-      installFirefox: ['Desktop Firefox does not install web apps.', 'Open this address in Chrome or Edge.', 'Then click the install icon in the address bar.'],
-      countries: 'Countries', exploreKicker: 'Explore', nCountries: n => `${n} countries`, nStations: n => `${n} stations`,
-      sortDefault: 'Recommended', sortName: 'Name A–Z', sortStations: 'Most stations', recent: 'Recently played',
-      searchCountries: 'Search country or code…', searchStations: 'Search station or genre…',
-      sortPopular: 'Most played', sortVotes: 'Most liked', sortBitrate: 'Highest quality', onlyFav: 'Favorites only', onlyHttps: 'HTTPS only',
-      noCountries: 'No countries found.', noStations: 'No stations found.', loading: 'Loading…',
-      favTitle: 'Favorite stations', favEmpty: 'No favorites yet. Tap ♥ next to a station to add it.',
-      pick: 'Pick a station', connecting: 'Connecting…', live: 'Live', paused: 'Paused',
-      error: 'Station not responding', errorHttp: 'HTTP only — blocked over HTTPS',
-      srcLive: 'Live list from radio-browser.info', srcCache: d => `Offline copy from ${d}`, srcSnapshot: d => `Built-in list from ${d}`,
-      offline: 'No internet — radio needs a connection.', online: 'Back online.', update: 'A new version is available.', reload: 'Reload',
-      themeAuto: 'Theme: system', themeLight: 'Theme: light', themeDark: 'Theme: dark',
-      play: 'Play', pause: 'Pause', prev: 'Previous', next: 'Next', addFav: 'Add to favorites', removeFav: 'Remove from favorites',
-      back: 'Back', volume: 'Volume', notFound: 'No such country.', close: 'Close',
-      httpNote: 'Stations marked HTTP may not play when the app is opened over HTTPS.',
-      nowPlaying: 'Now playing', sleep: 'Sleep timer', off: 'Off', min: 'min', sleepSet: n => `Radio stops in ${n} min.`, sleepOff: 'Sleep timer off.',
-      sleepDone: 'Sleep timer stopped the radio. Good night 🌙', share: 'Share', copied: 'Link copied.', surpriseFrom: (n, c) => `Surprise: ${n} · ${c}`,
-      aboutTitle: 'About Radio World', aboutLead: 'Radio from all over the world in one fast, beautiful, installable app.',
-      license: 'License', licenseText: '© 2026 Radio World. All rights reserved. The code, design, icon and visual elements of Radio World may not be copied, modified or distributed without written permission, except as permitted by applicable law or GitHub’s Terms of Service.',
-      thirdParty: 'Third-party components and data', fullLicense: 'Full license text', notices: 'All third-party notices',
-      disclaimer: 'Radio World is not affiliated with radio-browser.info or the radio stations. Streams, names and logos belong to their respective owners.',
-      version: 'Version', rights: 'All rights reserved',
-    },
-  };
-  let lang = LS.get('lang', (navigator.language || '').toLowerCase().startsWith('bg') ? 'bg' : 'en');
-  const t = (k, ...a) => { const v = (STR[lang] || STR.en)[k]; return typeof v === 'function' ? v(...a) : (v ?? k); };
+  const STR = window.RW_I18N, LANGS = window.RW_LANGS;
+  const META = Object.fromEntries(LANGS.map(l => [l.code, l]));
+  function detectLang() {
+    for (const l of (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'])) {
+      const p = String(l).toLowerCase();
+      if (/^(nb|no|nn)(-|$)/.test(p)) return 'nb';
+      const base = p.split('-')[0];
+      if (STR[base]) return base;
+    }
+    return 'en';
+  }
+  let lang = LS.get('lang', null);
+  if (!STR[lang]) lang = detectLang();
+  const loc = () => META[lang].locale;
+  const pluralRules = {};
+  const fmtNum = n => new Intl.NumberFormat(loc()).format(n);
+  function t(k, p) {
+    let v = STR[lang][k] ?? STR.en[k] ?? k;
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      let cat = 'other';
+      try { cat = (pluralRules[lang] || (pluralRules[lang] = new Intl.PluralRules(loc()))).select(p && typeof p.n === 'number' ? p.n : 0); } catch (e) { /* default */ }
+      v = v[cat] ?? v.other;
+    }
+    if (typeof v === 'string' && p) v = v.replace(/\{(\w+)\}/g, (m, name) => (p[name] == null ? m : typeof p[name] === 'number' ? fmtNum(p[name]) : String(p[name])));
+    return v;
+  }
   let regionNames = null;
-  const countryName = cc => { try { regionNames = regionNames || new Intl.DisplayNames([lang], { type: 'region' }); return regionNames.of(cc) || cc; } catch (e) { return cc; } };
-  const fmtNum = n => new Intl.NumberFormat(lang === 'bg' ? 'bg-BG' : 'en-US').format(n);
+  const countryName = cc => { try { regionNames = regionNames || new Intl.DisplayNames([loc()], { type: 'region' }); return regionNames.of(cc) || cc; } catch (e) { return cc; } };
   const HOME_CC = ((navigator.language || '').split('-')[1] || '').toUpperCase();
 
   // ---------- helpers ----------
@@ -100,7 +53,7 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const safeUrl = u => (/^https?:\/\//i.test(u || '') ? u : '');
   const upgrade = u => (IS_HTTPS && /^http:\/\//i.test(u || '') ? 'https://' + u.slice(7) : u);
-  const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(lang === 'bg' ? 'bg-BG' : 'en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }); } catch (e) { return iso; } };
+  const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(loc(), { year: 'numeric', month: '2-digit', day: '2-digit' }); } catch (e) { return iso; } };
   const norm = s => String(s || '').toLocaleLowerCase();
   const PLACEHOLDER = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ff3d8b"/><stop offset=".55" stop-color="#7b2ff7"/><stop offset="1" stop-color="#3dd9ff"/></linearGradient></defs>' +
@@ -142,11 +95,13 @@
 
   // ---------- language ----------
   function applyLang() {
-    document.documentElement.lang = lang;
+    document.documentElement.lang = META[lang].locale;
+    document.documentElement.dir = META[lang].dir || 'ltr';
     regionNames = null;
     $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-    $('#langBtn').textContent = t('langName');
-    $('#langBtn').title = lang === 'bg' ? 'English' : 'Български';
+    $('#langBtn').innerHTML = `${icon('i-globe')}<span class="code">${lang.toUpperCase()}</span>`;
+    $('#langBtn').title = t('language'); $('#langBtn').setAttribute('aria-label', `${t('language')}: ${META[lang].name}`);
+    $('#langSheet [data-close]').setAttribute('aria-label', t('close'));
     $('#favLink').setAttribute('aria-label', t('favorites'));
     $('#aboutLink').setAttribute('aria-label', t('about')); $('#aboutLink').title = t('about');
     $$('[data-act="prev"]').forEach(b => b.setAttribute('aria-label', t('prev')));
@@ -157,7 +112,19 @@
     $('#installSheet [data-close]').setAttribute('aria-label', t('close'));
     applyTheme(); renderSleepSeg(); updatePlayerUI();
   }
-  $('#langBtn').addEventListener('click', () => { lang = lang === 'bg' ? 'en' : 'bg'; LS.set('lang', lang); applyLang(); route(); });
+  function openLangSheet() {
+    $('#langTitle').textContent = lang === 'en' ? 'Language' : `${t('language')} · Language`;
+    $('#langGrid').innerHTML = LANGS.map(l => `<button class="lang-opt" type="button" lang="${l.code}" dir="${l.dir || 'ltr'}" data-lang="${l.code}" aria-pressed="${l.code === lang}"><b>${esc(l.name)}</b><span>${esc(l.en)}</span></button>`).join('');
+    $('#langSheet').classList.remove('hidden');
+    ($('#langGrid [aria-pressed="true"]') || $('#langSheet [data-close]')).focus();
+  }
+  function closeLangSheet() { $('#langSheet').classList.add('hidden'); }
+  $('#langBtn').addEventListener('click', openLangSheet);
+  $('#langSheet').addEventListener('click', e => {
+    if (e.target.id === 'langSheet' || e.target.closest('[data-close]')) { closeLangSheet(); return; }
+    const b = e.target.closest('[data-lang]'); if (!b) return;
+    lang = b.dataset.lang; LS.set('lang', lang); closeLangSheet(); applyLang(); route();
+  });
 
   // ---------- data ----------
   let countriesData = null, globeData = null;
@@ -322,7 +289,7 @@
     const top = list.slice(0, Math.min(30, list.length));
     const st = top[Math.floor(Math.random() * top.length)];
     play(st, list);
-    toast(t('surpriseFrom', st.n, countryName(cc)));
+    toast(t('surpriseFrom', { name: st.n, country: countryName(cc) }));
   }
 
   audio.addEventListener('playing', () => setState('live'));
@@ -347,7 +314,7 @@
     $('#np').classList.toggle('is-live', state === 'live');
     $$('[data-act="fav"]').forEach(fb => { fb.disabled = !current; fb.dataset.fav = current ? current.i : ''; setFavBtn(fb, !!current && isFav(current.i)); });
     $$('[data-act="prev"], [data-act="next"]').forEach(b => { b.disabled = queue.length < 2; });
-    document.title = current && playing ? `${current.n} · Radio World` : 'Radio World — ' + (lang === 'bg' ? 'радио от целия свят' : 'radio from around the world');
+    document.title = current && playing ? `${current.n} · Radio World` : `Radio World — ${t('tagline')}`;
     if ('mediaSession' in navigator) navigator.mediaSession.playbackState = playing ? 'playing' : current ? 'paused' : 'none';
     // now-playing sheet
     $('#npName').textContent = current ? current.n : t('pick');
@@ -381,7 +348,7 @@
   const v0 = LS.get('vol', 80); audio.volume = v0 / 100; vols.forEach(v => { v.value = v0; });
   vols.forEach(v => v.addEventListener('input', () => { audio.volume = v.value / 100; LS.set('vol', +v.value); vols.forEach(o => { if (o !== v) o.value = v.value; }); }));
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { if (!$('#np').classList.contains('hidden')) closeNP(); else if (!$('#installSheet').classList.contains('hidden')) closeInstall(); return; }
+    if (e.key === 'Escape') { if (!$('#np').classList.contains('hidden')) closeNP(); else if (!$('#installSheet').classList.contains('hidden')) closeInstall(); else if (!$('#langSheet').classList.contains('hidden')) closeLangSheet(); return; }
     if (e.code !== 'Space' || /^(INPUT|SELECT|TEXTAREA|BUTTON|A)$/.test(e.target.tagName) || e.target.getAttribute('role') === 'button') return;
     e.preventDefault(); togglePlay();
   });
@@ -396,7 +363,7 @@
   function setSleep(min) {
     clearInterval(sleepTimer); sleepEnd = min ? Date.now() + min * 60000 : 0;
     if (min) sleepTimer = setInterval(sleepTick, 5000);
-    toast(min ? t('sleepSet', min) : t('sleepOff'));
+    toast(min ? t('sleepSet', { n: min }) : t('sleepOff'));
     renderSleepSeg(); sleepTick();
   }
   function sleepTick() {
@@ -414,7 +381,7 @@
   function renderSleepSeg() {
     const left = sleepLeft();
     const cur = sleepEnd ? SLEEP_STEPS.slice(1).reduce((best, m) => (Math.abs(m - left) < Math.abs(best - left) ? m : best), 15) : 0;
-    $('#sleepSeg').innerHTML = SLEEP_STEPS.map(m => `<button type="button" data-min="${m}" aria-pressed="${m === cur}">${m ? `${m} ${esc(t('min'))}` : esc(t('off'))}</button>`).join('');
+    $('#sleepSeg').innerHTML = SLEEP_STEPS.map(m => `<button type="button" data-min="${m}" aria-pressed="${m === cur}">${m ? esc(t('minN', { n: m })) : esc(t('off'))}</button>`).join('');
   }
   $('#sleepSeg').addEventListener('click', e => { const b = e.target.closest('[data-min]'); if (b) setSleep(+b.dataset.min); });
   $('#sleepBtn').addEventListener('click', () => {
@@ -555,9 +522,9 @@
     view.innerHTML = `
       <section class="hero">
         <div class="hero-copy">
-          <span class="live-pill"><span class="pulse"></span>${esc(t('livePill', nCountries))}</span>
+          <span class="live-pill"><span class="pulse"></span>${esc(t('livePill', { n: nCountries }))}</span>
           <h1>${esc(t('heroA'))}<br><span class="grad-text">${esc(t('heroB'))}</span></h1>
-          <p class="lead">${esc(t('lead', fmtNum(totalStations), nCountries))}</p>
+          <p class="lead">${esc(t('lead', { s: totalStations, c: nCountries }))}</p>
           <div class="cta-row">
             <button class="btn primary" id="listenNow" type="button"><span class="ic">${icon('i-play')}</span>${esc(current ? `${t('resume')}: ${resumeName}` : t('listenNow'))}</button>
             <button class="btn" id="surpriseBtn" type="button">${icon('i-dice')} ${esc(t('surprise'))}</button>
@@ -579,7 +546,7 @@
       <div class="section-head"><div><span class="kicker">${esc(t('exploreKicker'))}</span><h2>${esc(t('countries'))}</h2></div><span class="count" id="cnt"></span></div>
       <div class="toolbar">
         <label class="search">${icon('i-search')}<input id="q" type="search" placeholder="${esc(t('searchCountries'))}" aria-label="${esc(t('searchCountries'))}" autocomplete="off"></label>
-        <select id="sort" aria-label="Sort"><option value="default">${esc(t('sortDefault'))}</option><option value="name">${esc(t('sortName'))}</option><option value="stations">${esc(t('sortStations'))}</option></select>
+        <select id="sort" aria-label="${esc(t('sort'))}"><option value="default">${esc(t('sortDefault'))}</option><option value="name">${esc(t('sortName'))}</option><option value="stations">${esc(t('sortStations'))}</option></select>
       </div>
       <div class="grid" id="grid"></div>
       <div class="empty hidden" id="none">${esc(t('noCountries'))}</div>
@@ -598,12 +565,12 @@
     const draw = () => {
       const s = norm(q.value.trim());
       const items = list.filter(c => !s || norm(c.name).includes(s) || norm(c.cc).includes(s));
-      if (sort.value === 'stations') items.sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, lang));
-      else if (sort.value === 'name') items.sort((a, b) => a.name.localeCompare(b.name, lang));
-      else items.sort((a, b) => (b.cc === HOME_CC) - (a.cc === HOME_CC) || (b.n >= 100) - (a.n >= 100) || a.name.localeCompare(b.name, lang));
+      if (sort.value === 'stations') items.sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, loc()));
+      else if (sort.value === 'name') items.sort((a, b) => a.name.localeCompare(b.name, loc()));
+      else items.sort((a, b) => (b.cc === HOME_CC) - (a.cc === HOME_CC) || (b.n >= 100) - (a.n >= 100) || a.name.localeCompare(b.name, loc()));
       $('#grid').innerHTML = items.map(c => `<a class="country" href="#/c/${esc(c.cc.toLowerCase())}">${flagTag(c.cc)}
-        <span class="c-text"><span class="c-name">${esc(c.name)}</span><span class="c-meta"><span class="cc">${esc(c.cc)} · </span>${esc(t('nStations', fmtNum(c.n)))}</span></span>${signal(c.n)}</a>`).join('');
-      $('#cnt').textContent = t('nCountries', items.length);
+        <span class="c-text"><span class="c-name">${esc(c.name)}</span><span class="c-meta"><span class="cc">${esc(c.cc)} · </span>${esc(t('nStations', { n: c.n }))}</span></span>${signal(c.n)}</a>`).join('');
+      $('#cnt').textContent = t('nCountries', { n: items.length });
       $('#none').classList.toggle('hidden', items.length > 0);
     };
     q.addEventListener('input', draw);
@@ -621,7 +588,7 @@
       const hubs = byCount.filter(c => pickSet.has(c.cc)).map(c => ({ cc: c.cc, n: c.n, lat: gd.centres[c.cc][0], lon: gd.centres[c.cc][1], w: Math.log(1 + c.n) / maxLog }));
       globe = new window.RadioGlobe($('#globe'), {
         dots: gd.dots, hubs,
-        label: h => `${countryName(h.cc)} · ${t('nStations', fmtNum(h.n))}`,
+        label: h => `${countryName(h.cc)} · ${t('nStations', { n: h.n })}`,
         onPick: cc => { location.hash = `#/c/${cc.toLowerCase()}`; },
       });
       const focusCc = current && current.cc && gd.centres[current.cc] ? current.cc : gd.centres[HOME_CC] ? HOME_CC : null;
@@ -640,7 +607,7 @@
       </div>
       <div class="toolbar">
         <label class="search">${icon('i-search')}<input id="q" type="search" placeholder="${esc(t('searchStations'))}" aria-label="${esc(t('searchStations'))}" autocomplete="off"></label>
-        <select id="sort" aria-label="Sort"><option value="popular">${esc(t('sortPopular'))}</option><option value="votes">${esc(t('sortVotes'))}</option><option value="name">${esc(t('sortName'))}</option><option value="bitrate">${esc(t('sortBitrate'))}</option></select>
+        <select id="sort" aria-label="${esc(t('sort'))}"><option value="popular">${esc(t('sortPopular'))}</option><option value="votes">${esc(t('sortVotes'))}</option><option value="name">${esc(t('sortName'))}</option><option value="bitrate">${esc(t('sortBitrate'))}</option></select>
         <button class="chip" id="onlyFav" type="button" aria-pressed="false">${icon('i-heart')} ${esc(t('onlyFav'))}</button>
         ${IS_HTTPS ? `<button class="chip" id="onlyHttps" type="button" aria-pressed="false">${icon('i-lock')} ${esc(t('onlyHttps'))}</button>` : ''}
       </div>
@@ -651,8 +618,8 @@
     const res = await loadStations(cc);
     if (location.hash.toLowerCase() !== `#/c/${cc.toLowerCase()}`) return;
     const all = res.list.map(s => ({ ...s, cc }));
-    $('#src').textContent = res.source === 'live' ? t('srcLive') : res.source === 'cache' ? t('srcCache', fmtDate(res.date))
-      : res.source === 'snapshot' ? t('srcSnapshot', fmtDate(res.date)) : t('offline');
+    $('#src').textContent = res.source === 'live' ? t('srcLive') : res.source === 'cache' ? t('srcCache', { d: fmtDate(res.date) })
+      : res.source === 'snapshot' ? t('srcSnapshot', { d: fmtDate(res.date) }) : t('offline');
     const q = $('#q'), sort = $('#sort'), favBtn = $('#onlyFav'), httpsBtn = $('#onlyHttps');
     sort.value = LS.get('ssort', 'popular');
     let onlyFav = false, onlyHttps = !!(httpsBtn && LS.get('onlyHttps', false));
@@ -662,9 +629,9 @@
       const items = all.filter(st => (!s || norm(st.n).includes(s) || (st.t || []).some(x => norm(x).includes(s)))
         && (!onlyFav || isFav(st.i)) && (!onlyHttps || /^https:/i.test(st.u)));
       if (sort.value === 'votes') items.sort((a, b) => b.v - a.v);
-      else if (sort.value === 'name') items.sort((a, b) => a.n.localeCompare(b.n, lang));
+      else if (sort.value === 'name') items.sort((a, b) => a.n.localeCompare(b.n, loc()));
       else if (sort.value === 'bitrate') items.sort((a, b) => b.b - a.b);
-      $('#cnt').textContent = t('nStations', fmtNum(items.length));
+      $('#cnt').textContent = t('nStations', { n: items.length });
       mountList($('#list'), items, false, sort.value === 'popular' && !s);
     };
     q.addEventListener('input', draw);
@@ -677,7 +644,7 @@
   function renderFavorites() {
     view.innerHTML = `
       <div class="page-head"><a class="back" href="#/" aria-label="${esc(t('back'))}">${icon('i-back')}</a>
-      <div><h1>${esc(t('favTitle'))}</h1><div class="count">${esc(t('nStations', favs.length))}</div></div></div>
+      <div><h1>${esc(t('favTitle'))}</h1><div class="count">${esc(t('nStations', { n: favs.length }))}</div></div></div>
       <div class="toolbar"></div>
       ${favs.length ? '<div class="list" id="list"></div>' : `<div class="card empty">${esc(t('favEmpty'))}</div>`}
       ${footer()}`;
@@ -685,7 +652,6 @@
   }
 
   function renderAbout() {
-    const bg = lang === 'bg';
     const li = (name, what, lic, href) => `<li><b>${esc(name)}</b> — ${esc(what)} · <a href="${esc(href)}" target="_blank" rel="noopener">${esc(lic)}</a></li>`;
     view.innerHTML = `
       <article class="prose">
@@ -695,15 +661,15 @@
         <p>${esc(t('aboutLead'))}</p>
         <p class="count">${esc(t('version'))} ${APP_VERSION}</p>
         <h2>${esc(t('license'))}</h2>
-        <div class="card"><p class="legal">${esc(t('licenseText'))}</p><p><a href="LICENSE.txt" target="_blank" rel="noopener">${esc(t('fullLicense'))}</a> · <a href="THIRD_PARTY_NOTICES.txt" target="_blank" rel="noopener">${esc(t('notices'))}</a></p></div>
+        <div class="card"><p class="legal">${esc(t('licenseText'))}</p>${lang !== 'en' ? `<p class="count">${esc(t('licenseAuth'))}</p>` : ''}<p><a href="LICENSE.txt" target="_blank" rel="noopener">${esc(t('fullLicense'))}</a> · <a href="THIRD_PARTY_NOTICES.txt" target="_blank" rel="noopener">${esc(t('notices'))}</a></p></div>
         <h2>${esc(t('thirdParty'))}</h2>
         <ul>
-          ${li('radio-browser.info', bg ? 'каталог на радиостанциите' : 'radio station directory', bg ? 'публично достояние' : 'public domain', 'https://www.radio-browser.info/')}
-          ${li('hls.js 1.7.4', bg ? 'възпроизвеждане на HLS потоци' : 'HLS stream playback', 'Apache-2.0', 'vendor/hls.js-LICENSE.txt')}
-          ${li('Unbounded', bg ? 'шрифт за заглавия' : 'display typeface', 'SIL OFL 1.1', 'fonts/Unbounded-OFL.txt')}
-          ${li('Manrope', bg ? 'шрифт за текст' : 'text typeface', 'SIL OFL 1.1', 'fonts/Manrope-OFL.txt')}
-          ${li('Natural Earth · world-atlas', bg ? 'контури на сушата за глобуса' : 'land outlines for the globe', bg ? 'публично достояние / ISC' : 'public domain / ISC', 'https://www.naturalearthdata.com/')}
-          ${li('flagcdn.com', bg ? 'изображения на знамената' : 'flag images', 'flagcdn.com', 'https://flagcdn.com/')}
+          ${li('radio-browser.info', t('tpRadio'), t('publicDomain'), 'https://www.radio-browser.info/')}
+          ${li('hls.js 1.7.4', t('tpHls'), 'Apache-2.0', 'vendor/hls.js-LICENSE.txt')}
+          ${li('Unbounded', t('tpDisplay'), 'SIL OFL 1.1', 'fonts/Unbounded-OFL.txt')}
+          ${li('Manrope', t('tpText'), 'SIL OFL 1.1', 'fonts/Manrope-OFL.txt')}
+          ${li('Natural Earth · world-atlas', t('tpGlobe'), t('publicDomainIsc'), 'https://www.naturalearthdata.com/')}
+          ${li('flagcdn.com', t('tpFlags'), t('publicDomain'), 'https://flagpedia.net/')}
         </ul>
         <p>${esc(t('disclaimer'))}</p>
       </article>

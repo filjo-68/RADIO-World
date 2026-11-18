@@ -10,7 +10,7 @@ An installable web app with more than 51,000 live radio stations from 249 countr
 - **Player:** keeps playing while you browse. It has a gradient frame while live and controls on the lock screen and on headphones (Media Session).
 - **“Now playing” screen:** large artwork, visualiser, tags, share button and sleep timer (15–90 min, fades out at the end).
 - **Themes:** light, dark and system, with an aurora background and a light film grain.
-- **Language:** Bulgarian or English. Country names come from `Intl.DisplayNames`.
+- **15 interface languages:** Bulgarian, English, Norwegian Bokmål, German, Spanish, French, Italian, Portuguese (Brazil), Russian, Turkish, Arabic (right to left), Hindi, Chinese (Simplified), Japanese and Korean. The app follows the browser's language and has a picker in the top bar. Plurals come from `Intl.PluralRules`, and country names, numbers and dates are localized with `Intl`. Translations are in `i18n.js`.
 - **Search and sort:** for countries and stations. Favorites and recently played are stored on the device.
 - **Install instructions** for iPhone/iPad, Android, Chrome/Edge, Safari for Mac and Firefox.
 - **Offline:** the app, country list, flags, fonts, globe and favorites work without internet. Station lists of countries you have opened are cached, and a built-in snapshot from 2026-11-18 is the fallback. **The radio streams themselves are live and always need internet.**

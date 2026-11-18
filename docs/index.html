@@ -63,7 +63,7 @@ try { const t = localStorage.getItem('rw.theme'); if (t) { const v = JSON.parse(
     <button class="icon-btn hidden" id="installBtn" type="button"><svg><use href="#i-download"/></svg><span class="lbl" data-i18n="install">Инсталирай</span></button>
     <a class="icon-btn" id="favLink" href="#/favorites"><svg><use href="#i-heart"/></svg><span class="lbl" data-i18n="favorites">Любими</span></a>
     <a class="icon-btn" id="aboutLink" href="#/about"><svg><use href="#i-info"/></svg></a>
-    <button class="icon-btn" id="langBtn" type="button">EN</button>
+    <button class="icon-btn" id="langBtn" type="button"><svg><use href="#i-globe"/></svg><span class="code">BG</span></button>
     <button class="icon-btn" id="themeBtn" type="button"><svg><use href="#i-auto"/></svg></button>
   </nav>
 </header>
@@ -80,6 +80,15 @@ try { const t = localStorage.getItem('rw.theme'); if (t) { const v = JSON.parse(
     <h2 id="installTitle"></h2>
     <p class="muted" id="installText"></p>
     <ol class="steps" id="installSteps"></ol>
+  </div>
+</div>
+
+<!-- Language picker -->
+<div class="sheet-backdrop hidden" id="langSheet" role="dialog" aria-modal="true" aria-labelledby="langTitle">
+  <div class="sheet">
+    <button class="sheet-close" type="button" data-close><svg><use href="#i-close"/></svg></button>
+    <h2 id="langTitle">Language</h2>
+    <div class="lang-grid" id="langGrid"></div>
   </div>
 </div>
 
@@ -132,6 +141,7 @@ try { const t = localStorage.getItem('rw.theme'); if (t) { const v = JSON.parse(
 </footer>
 <audio id="audio" preload="none"></audio>
 
+<script src="i18n.js" defer></script>
 <script src="globe.js" defer></script>
 <script src="app.js" defer></script>
 </body>
