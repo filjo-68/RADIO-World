@@ -23,7 +23,7 @@ window.RW_LANGS = [
 window.RW_I18N = {
   bg: {
     install: 'Инсталирай', favorites: 'Любими', about: 'За приложението', language: 'Език', tagline: 'радио от целия свят', sort: 'Подреждане',
-    livePill: 'На живо от {n} държави', heroA: 'Настрой се на', heroB: 'планетата.',
+    livePill: 'На живо от {n} държави', heroA: 'Чуй света', heroB: 'около себе си',
     lead: '{s} радиостанции от {c} държави — на живо и без регистрация. Инсталирай го като приложение и слушай навсякъде.',
     listenNow: 'Слушай сега', resume: 'Продължи', surprise: 'Изненадай ме', statStations: 'станции', statCountries: 'държави', statOffline: 'работи офлайн',
     globeHint: 'Завърти глобуса · докосни сигнал', installTitle: 'Инсталирай Radio World',
